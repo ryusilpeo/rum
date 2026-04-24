@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {useOutletContext} from "react-router";
 import {CheckCircle2, ImageIcon, UploadIcon} from "lucide-react";
 import {PROGRESS_INTERVAL_MS, PROGRESS_STEP, REDIRECT_DELAY_MS} from "../lib/constants";
@@ -11,6 +11,8 @@ const Upload = ({ onComplete }: UploadProps) => {
     const [file, setFile] = useState<File | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [progress, setProgress] = useState(0);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const readerRef = useRef<FileReader | null>(null);
 
     const { isSignedIn } = useOutletContext<AuthContext>();
 
@@ -19,14 +21,19 @@ const Upload = ({ onComplete }: UploadProps) => {
         setFile(selectedFile);
         setProgress(0);
 
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        if (readerRef.current) readerRef.current.abort();
+
         const reader = new FileReader();
+        readerRef.current = reader;
+
         reader.onload = (e) => {
             const base64Data = e.target?.result as string;
 
-            const interval = setInterval(() => {
+            intervalRef.current = setInterval(() => {
                 setProgress((prev) => {
                     if (prev >= 100) {
-                        clearInterval(interval);
+                        if (intervalRef.current) clearInterval(intervalRef.current);
                         setTimeout(() => {
                             onComplete?.(base64Data);
                         }, REDIRECT_DELAY_MS);
@@ -38,6 +45,13 @@ const Upload = ({ onComplete }: UploadProps) => {
         };
         reader.readAsDataURL(selectedFile);
     }, [isSignedIn, onComplete]);
+
+    useEffect(() => {
+        return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            if (readerRef.current) readerRef.current.abort();
+        };
+    }, []);
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -62,7 +76,7 @@ const Upload = ({ onComplete }: UploadProps) => {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!isSignedIn) return;
         const selectedFile = e.target.files?.[0];
-        if (selectedFile) {
+        if (selectedFile && selectedFile.type.startsWith('image/')) {
             processFile(selectedFile);
         }
     };
