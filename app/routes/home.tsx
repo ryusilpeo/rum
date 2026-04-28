@@ -40,9 +40,9 @@ export default function Home() {
         navigate(`/visualizer/${newId}`), {
             state: {
                 initialImage: saved.sourceImage,
-                initialRender: saved.renderedImage || null,
-                name,
-            },
+                initialRendered: saved.renderedImage || null,
+                name
+            }
         };
 
         return true;
@@ -106,7 +106,7 @@ export default function Home() {
 
                 <div className="projects-grid">
                     {projects.map(({id, name, renderedImage, sourceImage, timestamp}) => (
-                        <div key={id} className="project-card group">
+                        <div className="project-card group">
                             <div className="preview">
                                 <img
                                     src={renderedImage || sourceImage}
