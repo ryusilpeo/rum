@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d0250617-ae82-4bb5-ae95-ad57ec2189be" name="Changes" comment="" />
+    <list default="true" id="d0250617-ae82-4bb5-ae95-ad57ec2189be" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/ai.action.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/visualizer.$id.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/visualizer.$id.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -73,7 +77,7 @@
       <updated>1776930339414</updated>
       <workItem from="1776930340243" duration="4469000" />
       <workItem from="1777013864906" duration="6840000" />
-      <workItem from="1777360923468" duration="7134000" />
+      <workItem from="1777360923468" duration="13863000" />
     </task>
     <servers />
   </component>
