@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {useNavigate, useOutletContext, useParams} from "react-router";
 import {generate3DView} from "../../lib/ai.action";
 import {Box, Download, RefreshCcw, Share2, X} from "lucide-react";
@@ -16,11 +16,12 @@ const VisualizerId = () => {
     const [isProjectLoading, setIsProjectLoading] = useState(true);
 
     const [isProcessing, setIsProcessing] = useState(false);
+    const [projectError, setProjectError] = useState<string | null>(null);
     const [currentImage, setCurrentImage] = useState<string | null>(null);
 
     const handleBack = () => navigate('/');
 
-    const runGeneration = async (item: DesignItem) => {
+    const runGeneration = useCallback(async (item: DesignItem) => {
         if(!id || !item.sourceImage) return;
 
         try {
@@ -54,7 +55,7 @@ const VisualizerId = () => {
         } finally {
             setIsProcessing(false);
         }
-    }
+    }, [id, userId]);
 
     useEffect(() => {
         let isMounted = true;
@@ -71,8 +72,14 @@ const VisualizerId = () => {
 
             if (!isMounted) return;
 
+            if (!fetchedProject) {
+                setProjectError("Project not found");
+                setIsProjectLoading(false);
+                return;
+            }
+
             setProject(fetchedProject);
-            setCurrentImage(fetchedProject?.renderedImage || null);
+            setCurrentImage(fetchedProject.renderedImage || null);
             setIsProjectLoading(false);
             hasInitialGenerated.current = false;
         };
@@ -100,7 +107,16 @@ const VisualizerId = () => {
 
         hasInitialGenerated.current = true;
         void runGeneration(project);
-    }, [project, isProjectLoading]);
+    }, [project, isProjectLoading, runGeneration]);
+
+    if (projectError) {
+        return (
+            <div className="visualizer flex flex-col items-center justify-center min-h-screen">
+                <h2 className="text-2xl font-bold mb-4">{projectError}</h2>
+                <Button onClick={handleBack}>Go Back Home</Button>
+            </div>
+        );
+    }
 
     return (
         <div className="visualizer">

@@ -15,11 +15,11 @@ export const getCurrentUser = async () => {
     }
 }
 
-export const createProject = async ({ item, visibility = "private" }: CreateProjectParams): Promise<DesignItem | null | undefined> => {
+export const createProject = async ({ item, visibility = "private" }: CreateProjectParams): Promise<DesignItem | null> => {
     console.log('Starting createProject for item:', item.id);
 
     if(!PUTER_WORKER_URL) {
-        console.warn('Missing VITE_PUTER_WORKER_URL; skip history fetch');
+        console.warn('Missing PUTER_WORKER_URL; skipping createProject remote call');
         return null;
     }
 
@@ -92,7 +92,7 @@ export const createProject = async ({ item, visibility = "private" }: CreateProj
 
 export const getProjects = async () => {
     if(!PUTER_WORKER_URL) {
-        console.warn('Missing VITE_PUTER_WORKER_URL; skip history fetch');
+        console.warn('Missing PUTER_WORKER_URL; skipping getProjects remote call');
         return [];
     }
 
@@ -114,7 +114,7 @@ export const getProjects = async () => {
 
 export const getProjectById = async ({ id }: { id: string }) => {
     if (!PUTER_WORKER_URL) {
-        console.warn("Missing VITE_PUTER_WORKER_URL; skipping project fetch.");
+        console.warn('Missing PUTER_WORKER_URL; skipping getProjectById remote call');
         return null;
     }
 
