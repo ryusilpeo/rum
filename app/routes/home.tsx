@@ -43,13 +43,7 @@ export default function Home() {
 
             console.log('Project created, navigating to visualizer:', saved);
 
-            navigate(`/visualizer/${newId}`, {
-                state: {
-                    initialImage: saved.sourceImage,
-                    initialRendered: saved.renderedImage || null,
-                    name: saved.name
-                }
-            });
+            navigate(`/visualizer/${newId}`);
 
             return true;
         } finally {

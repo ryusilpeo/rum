@@ -13,7 +13,7 @@ export const fetchAsDataUrl = async (url: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
+    reader.onerror = () => reject(reader.error ?? new Error("FileReader error"));
     reader.readAsDataURL(blob);
   });
 };
